@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Jet Lag Reset — plan your light, sleep, and caffeine windows to arrive on local time.">
+<title>Jet Lag Reset</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { color-scheme: light; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #efe6d2;
+  color: #1a2540;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 500; line-height: 1.1; letter-spacing: -0.01em; }
+a { color: inherit; }
+</style>
+</head>
+<body>
+
+<!-- ================================================================
+     JET LAG RESET — Vercel static page
+     ================================================================ -->
+<div id="jlr">
+<style>
+#jlr * { box-sizing: border-box; margin: 0; padding: 0; }
+#jlr {
+  --ink: #1a2540;
+  --ink-70: rgba(26,37,64,.7);
+  --ink-50: rgba(26,37,64,.5);
+  --ink-30: rgba(26,37,64,.3);
+  --ink-15: rgba(26,37,64,.15);
+  --ink-08: rgba(26,37,64,.08);
+  --ink-04: rgba(26,37,64,.04);
+  --paper: #efe6d2;
+  --paper-soft: rgba(255,250,238,.5);
+  --paper-card: rgba(255,250,238,.45);
+
+  --c-sleep:    #1a2540;
+  --c-light:    #dd8a3a;
+  --c-caf:      #7a4a2a;
+  --c-nap:      #7e9bbc;
+  --c-mel:      #5a3d88;
+  --c-flight:   #243a65;
+  --c-board:    #38445a;
+  --c-checkin:  #4a5870;
+  --c-customs:  #3d5c48;
+
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 36px 18px 56px;
+  color: var(--ink);
+}
+
+/* Header */
+#jlr .jh { text-align: center; margin-bottom: 28px; }
+#jlr .jh h2 { font-size: 38px; font-weight: 500; letter-spacing: -0.02em; }
+#jlr .jh-tag {
+  margin-top: 6px; opacity: .55; font-size: 13px;
+  font-family: 'Fraunces', serif; font-style: italic;
+  letter-spacing: .02em;
+}
+
+/* Progress dots */
+#jlr .jdots { display: flex; justify-content: center; gap: 10px; margin-bottom: 32px; }
+#jlr .jdot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--ink-15); border: none;
+  cursor: pointer; padding: 0;
+  transition: background .2s, transform .15s, width .2s;
+}
+#jlr .jdot.on { background: var(--ink); width: 22px; border-radius: 100px; }
+#jlr .jdot:hover:not(:disabled):not(.on) { background: var(--ink-30); transform: scale(1.3); }
+#jlr .jdot:disabled { cursor: not-allowed; opacity: .4; }
+
+/* Form card */
+#jlr .jcard {
+  padding: 24px;
+  margin-bottom: 16px;
+  background: var(--paper-card);
+  border: 1px solid var(--ink-15);
+  border-radius: 12px;
+}
+#jlr .jcard-ttl {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 21px; font-weight: 500; letter-spacing: -0.005em;
+  margin-bottom: 20px; padding-bottom: 14px;
+  border-bottom: 1px solid var(--ink-15);
+}
+
+/* Field label */
+#jlr .jlbl {
+  display: block;
+  font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 1.4px;
+  margin-bottom: 6px; opacity: .55;
+}
+
+/* Inputs */
+#jlr input[type=text],
+#jlr input[type=date],
+#jlr input[type=time],
+#jlr select {
+  width: 100%; padding: 10px 12px; margin-bottom: 14px;
+  border: 1px solid var(--ink-15); border-radius: 8px;
+  font: inherit; color: inherit;
+  background: var(--paper-soft);
+  transition: border-color .15s, background .15s;
+}
+#jlr input:focus, #jlr select:focus { outline: none; border-color: var(--ink); }
+
+/* Pill selectors (form) */
+#jlr .jpills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+#jlr .jpill {
+  padding: 8px 16px;
+  border: 1px solid var(--ink-15); border-radius: 100px;
+  font-size: 13px; font-weight: 500;
+  cursor: pointer; user-select: none;
+  background: var(--paper-soft); opacity: .8;
+  transition: opacity .15s, background .15s, color .15s, border-color .15s;
+}
+#jlr .jpill:hover { opacity: 1; }
+#jlr .jpill.on {
+  opacity: 1; background: var(--ink); color: var(--paper);
+  border-color: var(--ink); font-weight: 600;
+}
+
+/* Checkboxes */
+#jlr .jchecks { display: flex; flex-direction: column; gap: 9px; margin-bottom: 14px; }
+#jlr .jchk { display: flex; align-items: center; gap: 10px; cursor: pointer; opacity: .85; font-size: 14px; }
+#jlr .jchk input { width: 16px; height: 16px; cursor: pointer; margin: 0; flex-shrink: 0; accent-color: var(--ink); }
+
+/* Buttons */
+#jlr .jbtn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 11px 22px; border-radius: 100px;
+  font: inherit; font-size: 13px; font-weight: 600;
+  letter-spacing: .02em;
+  cursor: pointer; transition: opacity .2s, transform .1s;
+}
+#jlr .jbtn:active { transform: scale(.98); }
+#jlr .jbtn-p { background: var(--ink); color: var(--paper); border: 1.5px solid var(--ink); }
+#jlr .jbtn-p:hover { opacity: .85; }
+#jlr .jbtn-p:disabled { opacity: .5; cursor: wait; }
+#jlr .jbtn-s {
+  background: transparent; color: var(--ink);
+  border: 1px solid var(--ink-30); opacity: .8;
+}
+#jlr .jbtn-s:hover { opacity: 1; border-color: var(--ink); }
+#jlr .jbtn-row { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; }
+
+/* Grids */
+#jlr .jg2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+#jlr .jg3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+@media(max-width:520px){
+  #jlr .jg2, #jlr .jg3 { grid-template-columns: 1fr; }
+}
+
+/* Divider */
+#jlr .jdivider { border: none; border-top: 1px solid var(--ink-15); margin: 20px 0; }
+
+/* Alerts */
+#jlr .jalert,
+#jlr .jnote,
+#jlr .jform-err {
+  padding: 12px 14px; margin-bottom: 12px;
+  line-height: 1.55; font-size: 13px;
+  border-radius: 0 8px 8px 0;
+}
+#jlr .jalert    { border-left: 3px solid var(--c-light); background: rgba(221,138,58,.08); }
+#jlr .jnote     { border-left: 3px solid var(--c-mel);   background: rgba(90,61,136,.07); }
+#jlr .jform-err { border-left: 3px solid #c44545;        background: rgba(196,69,69,.06); }
+
+/* Plan header */
+#jlr .jplan-hdr {
+  display: flex; align-items: center; gap: 18px;
+  padding: 20px 22px; margin-bottom: 16px;
+  background: var(--paper-card);
+  border: 1px solid var(--ink-15); border-radius: 12px;
+}
+#jlr .jring {
+  width: 62px; height: 62px; border-radius: 50%;
+  border: 1.5px solid var(--ink);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--paper);
+}
+#jlr .jring-n { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 600; }
+#jlr .jplan-ttl {
+  font-family: 'Fraunces', serif; font-weight: 500;
+  font-size: 20px; margin-bottom: 4px; letter-spacing: -0.005em;
+}
+#jlr .jplan-sub { font-size: 12px; opacity: .7; line-height: 1.6; }
+
+/* Legend */
+#jlr .jlegend {
+  display: flex; flex-wrap: wrap; gap: 10px 18px;
+  padding: 14px 18px; margin-bottom: 18px;
+  background: var(--paper-card);
+  border: 1px solid var(--ink-15); border-radius: 12px;
+  font-size: 11.5px;
+}
+#jlr .jleg { display: flex; align-items: center; gap: 7px; }
+#jlr .jleg-bar { width: 8px; height: 16px; border-radius: 100px; flex-shrink: 0; }
+#jlr .jleg-bar.outlined { background: transparent !important; border: 1.5px dashed var(--ink-30); }
+
+/* ═════════════ FLIGHT REPEATER ═════════════ */
+#jlr .jflight {
+  padding: 16px; margin-bottom: 12px;
+  background: var(--paper-soft);
+  border: 1px solid var(--ink-15); border-radius: 10px;
+}
+#jlr .jflight-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+#jlr .jflight-idx {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.4px; opacity: .55;
+}
+#jlr .jflight-rm {
+  background: transparent; border: none; font: inherit; font-size: 18px;
+  line-height: 1; cursor: pointer; opacity: .4; padding: 2px 8px;
+  color: inherit; border-radius: 50%;
+}
+#jlr .jflight-rm:hover { opacity: .9; background: var(--ink-08); }
+#jlr .jflight-lookup {
+  display: flex; gap: 8px; align-items: center;
+}
+#jlr .jflight-lookup input { margin-bottom: 0; }
+#jlr .jflight-lookup .j-fn { flex: 1; text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+#jlr .jflight-lookup .j-fdate { flex: 1; }
+#jlr .jflight-lookup button { white-space: nowrap; padding: 10px 16px; flex-shrink: 0; }
+#jlr .jflight-status { margin-top: 10px; }
+#jlr .jflight-details { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--ink-15); }
+#jlr .jflight-route {
+  font-family: 'Fraunces', serif;
+  font-weight: 500; font-size: 18px; margin-bottom: 12px;
+  letter-spacing: .005em;
+}
+#jlr .jflight-route-tz {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px; opacity: .55; font-weight: 400;
+  letter-spacing: .03em;
+}
+
+/* ═════════════ TIMELINE ═════════════ */
+
+/* Day section header */
+#jlr .jday-hdr {
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  align-items: baseline; gap: 12px;
+  padding: 18px 8px 10px;
+  border-top: 1px solid var(--ink-30);
+  margin-top: 18px;
+}
+#jlr .jday-date {
+  font-family: 'Fraunces', serif;
+  font-weight: 500; font-size: 16px; letter-spacing: -0.005em;
+}
+#jlr .jday-tz {
+  font-family: 'Fraunces', serif;
+  font-size: 13px; font-style: italic;
+  opacity: .65; text-align: center;
+}
+#jlr .jday-label {
+  font-size: 10px; opacity: .5;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  text-align: right;
+}
+
+#jlr .jday-note {
+  font-size: 12px; opacity: .7;
+  padding: 4px 12px 12px;
+  line-height: 1.6;
+  font-style: italic;
+  font-family: 'Fraunces', serif;
+}
+
+/* Column headers */
+#jlr .jlane-hdrs {
+  display: flex;
+  padding: 8px 44px 4px;
+  gap: 4px;
+}
+#jlr .jlane-hdr {
+  font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.6px;
+  opacity: .42; text-align: center;
+  flex: 1;
+}
+
+/* Track */
+#jlr .jtrack { display: flex; padding-top: 4px; }
+
+/* Time rulers (both sides) */
+#jlr .jruler { width: 40px; flex-shrink: 0; position: relative; }
+#jlr .jruler-lbl {
+  position: absolute;
+  font-size: 10px; opacity: .4;
+  transform: translateY(-50%);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  font-weight: 500;
+}
+#jlr .jruler-l .jruler-lbl { right: 8px; text-align: right; }
+#jlr .jruler-r .jruler-lbl { left: 8px; }
+
+/* Event area */
+#jlr .jevents {
+  flex: 1; position: relative;
+  display: flex; gap: 4px;
+  padding: 0 6px;
+}
+
+/* Hour gridlines */
+#jlr .jgrid { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+#jlr .jgrid-line {
+  position: absolute; left: 0; right: 0;
+  border-top: 1px dashed var(--ink-08);
+}
+#jlr .jgrid-line.solid { border-top: 1px solid var(--ink-15); }
+
+/* No-sleep buffer band (4h pre/post flight) */
+#jlr .jno-sleep {
+  position: absolute;
+  left: 0; right: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent 0,
+    transparent 5px,
+    rgba(26,37,64,.05) 5px,
+    rgba(26,37,64,.05) 6px
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Lanes */
+#jlr .jlane { position: relative; flex: 1; }
+
+/* Event pill — capsule */
+#jlr .jep {
+  position: absolute;
+  left: 50%; transform: translateX(-50%);
+  width: 32px;
+  border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 8px 0;
+  overflow: hidden;
+  z-index: 2;
+}
+#jlr .jep-lbl {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 8.5px; font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+  white-space: nowrap;
+  opacity: .92;
+}
+#jlr .jep-sub { display: none; }
+
+/* Variants — circadian */
+#jlr .jep-seek  { background: var(--c-light); color: #fff; }
+#jlr .jep-avoid {
+  background: transparent;
+  border: 1.5px dashed var(--ink-30);
+}
+#jlr .jep-avoid .jep-lbl { color: var(--ink-50); }
+#jlr .jep-sleep { background: var(--c-sleep); color: var(--paper); }
+#jlr .jep-nap   { background: var(--c-nap); color: #fff; width: 26px; }
+#jlr .jep-caf-y { background: var(--c-caf); color: #fff; }
+#jlr .jep-caf-n {
+  background: transparent;
+  border: 1.5px dashed var(--ink-15);
+}
+#jlr .jep-caf-n .jep-lbl { color: var(--ink-50); }
+#jlr .jep-mel   { background: var(--c-mel); color: #fff; width: 22px; }
+
+/* Variants — journey */
+#jlr .jep-checkin { background: var(--c-checkin); color: #fff; width: 30px; }
+#jlr .jep-board   { background: var(--c-board); color: #fff; width: 30px; }
+#jlr .jep-flight  { background: var(--c-flight); color: #fff; width: 34px; }
+#jlr .jep-flight .jep-lbl { font-size: 9px; letter-spacing: 2px; }
+#jlr .jep-customs { background: var(--c-customs); color: #fff; width: 30px; }
+#jlr .jep-layover {
+  background: transparent;
+  border: 1.5px dashed var(--ink-30);
+  width: 28px;
+}
+#jlr .jep-layover .jep-lbl { color: var(--ink-50); }
+
+/* Disclaimer */
+#jlr .jdisc {
+  font-size: 11.5px; line-height: 1.7;
+  margin-top: 28px;
+  padding: 16px 18px;
+  background: var(--paper-card);
+  border: 1px solid var(--ink-15);
+  border-radius: 12px;
+  opacity: .7;
+}
+
+/* Flight lookup status */
+#jlr .jstatus-ok,
+#jlr .jstatus-err,
+#jlr .jstatus-spin {
+  padding: 10px 12px; font-size: 13px;
+  line-height: 1.5;
+  border-radius: 0 8px 8px 0;
+}
+#jlr .jstatus-ok  { border-left: 3px solid var(--c-customs); background: rgba(61,92,72,.07); }
+#jlr .jstatus-err { border-left: 3px solid #c44545; background: rgba(196,69,69,.06); }
+#jlr .jstatus-spin{ opacity: .65; font-style: italic; }
+#jlr .jstatus-ok a, #jlr .jstatus-err a { color: inherit; }
+
+/* Hidden */
+#jlr .h { display: none !important; }
+
+@media(max-width:520px){
+  #jlr { padding: 24px 12px 40px; }
+  #jlr .jh h2 { font-size: 30px; }
+  #jlr .jcard { padding: 18px; }
+  #jlr .jruler { width: 32px; }
+  #jlr .jevents { padding: 0 3px; gap: 3px; }
+  #jlr .jep { width: 26px; }
+  #jlr .jep-nap, #jlr .jep-mel { width: 20px; }
+  #jlr .jep-flight { width: 28px; }
+}
+</style>
+
+<!-- Header -->
+<div class="jh">
+  <h2 style="margin:0">Jet Lag Reset</h2>
+  <div class="jh-tag">Arrive on local time.</div>
+</div>
+
+<!-- Step dots -->
+<div class="jdots">
+  <button class="jdot on" id="jd1" type="button" onclick="jGoto(1)" title="Profile" aria-label="Go to Profile"></button>
+  <button class="jdot" id="jd2" type="button" onclick="jGoto(2)" title="Trip details" aria-label="Go to Trip details"></button>
+  <button class="jdot" id="jd3" type="button" onclick="jGoto(3)" title="Your plan" aria-label="Go to Your plan" disabled></button>
+</div>
+
+<!-- ═══════════════════════════════════
+     STEP 1: PROFILE
+     ═══════════════════════════════════ -->
+<div id="js1">
+  <div class="jcard">
+    <div class="jcard-ttl">Your Sleep Profile</div>
+    <div class="jg2">
+      <div>
+        <span class="jlbl">Normal Bedtime</span>
+        <input type="time" id="j-bed" value="22:30">
+      </div>
+      <div>
+        <span class="jlbl">Normal Wake Time</span>
+        <input type="time" id="j-wake" value="07:00">
+      </div>
+    </div>
+
+    <span class="jlbl">Chronotype</span>
+    <div class="jpills" id="jp-chrono">
+      <div class="jpill on" data-v="morning">Morning person</div>
+      <div class="jpill" data-v="neutral">Neutral</div>
+      <div class="jpill" data-v="evening">Night owl</div>
+    </div>
+
+    <span class="jlbl">Caffeine Use</span>
+    <div class="jpills" id="jp-caf">
+      <div class="jpill" data-v="none">None</div>
+      <div class="jpill on" data-v="light">Light</div>
+      <div class="jpill" data-v="normal">Normal</div>
+      <div class="jpill" data-v="heavy">Heavy</div>
+    </div>
+
+    <span class="jlbl">Melatonin</span>
+    <div class="jpills" id="jp-mel">
+      <div class="jpill" data-v="never">Never</div>
+      <div class="jpill on" data-v="open">Open to it</div>
+      <div class="jpill" data-v="use">Already use it</div>
+    </div>
+  </div>
+
+  <div class="jcard">
+    <div class="jcard-ttl">Health Exclusions</div>
+    <p style="font-size:13px;opacity:.6;margin-bottom:12px;">Select any that apply. Fasting and melatonin are disabled automatically.</p>
+    <div class="jchecks">
+      <label class="jchk"><input type="checkbox" class="jhx" value="diabetes"> Diabetes or blood sugar instability</label>
+      <label class="jchk"><input type="checkbox" class="jhx" value="pregnancy"> Pregnancy</label>
+      <label class="jchk"><input type="checkbox" class="jhx" value="ed"> History of eating disorder</label>
+      <label class="jchk"><input type="checkbox" class="jhx" value="seizure"> Seizure disorder</label>
+      <label class="jchk"><input type="checkbox" class="jhx" value="immune"> Immune disorder</label>
+      <label class="jchk"><input type="checkbox" class="jhx" value="meds"> Anticoagulant or sedative medication</label>
+      <label class="jchk"><input type="checkbox" class="jhx" value="u18"> Under 18</label>
+      <label class="jchk"><input type="checkbox" class="jhx" value="clinician"> Clinician-advised restrictions</label>
+    </div>
+  </div>
+
+  <div class="jbtn-row">
+    <button class="jbtn jbtn-p" onclick="jStep(2)">Next: Trip Details</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     STEP 2: TRIP
+     ═══════════════════════════════════ -->
+<div id="js2" class="h">
+  <div class="jcard">
+    <div class="jcard-ttl">Your Flights</div>
+    <p style="font-size:12px;opacity:.55;margin-bottom:14px;line-height:1.5;">
+      Enter one flight per leg. Time zones are determined automatically from each airport.
+      Aerodatabox fills in scheduled times &mdash; edit them if needed.
+    </p>
+
+    <div id="j-flights"></div>
+
+    <button class="jbtn jbtn-s" onclick="jAddFlight()" style="margin-top:4px;">+ Add another flight</button>
+
+    <hr class="jdivider">
+
+    <div class="jg2">
+      <div>
+        <span class="jlbl">Check-in Window</span>
+        <select id="j-checkin">
+          <option value="120">2 hrs before</option>
+          <option value="150">2.5 hrs before</option>
+          <option value="180" selected>3 hrs before</option>
+          <option value="240">4 hrs before</option>
+        </select>
+      </div>
+      <div>
+        <span class="jlbl">Customs / Immigration</span>
+        <select id="j-customs">
+          <option value="45">45 min</option>
+          <option value="60">1 hr</option>
+          <option value="90" selected>1.5 hrs</option>
+          <option value="120">2 hrs</option>
+        </select>
+      </div>
+    </div>
+
+    <hr class="jdivider">
+
+    <span class="jlbl">Your Goal</span>
+    <div class="jpills" id="jp-strat">
+      <div class="jpill on" data-v="alertness">Max alertness on arrival</div>
+      <div class="jpill" data-v="fast">Adapt as fast as possible</div>
+      <div class="jpill" data-v="sleep">Protect first-night sleep</div>
+      <div class="jpill" data-v="gentle">Gentle plan</div>
+    </div>
+  </div>
+
+  <div id="j-build-err"></div>
+
+  <div class="jbtn-row">
+    <button class="jbtn jbtn-s" onclick="jStep(1)">Back</button>
+    <button class="jbtn jbtn-p" onclick="jBuild()">Build My Plan</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     STEP 3: PLAN
+     ═══════════════════════════════════ -->
+<div id="js3" class="h">
+  <div id="j-phdr"></div>
+  <div id="j-alerts"></div>
+  <div id="j-legend"></div>
+  <div id="j-tl"></div>
+  <div class="jdisc">
+    Jet Lag Reset is for healthy adults and travel wellness planning only.
+    It does not diagnose, treat, cure, or prevent any disease or medical condition.
+    Do not restrict food, use melatonin, or significantly alter sleep if you are pregnant,
+    under 18, diabetic, have a history of eating disorder, seizure disorder, immune disorder,
+    serious medical condition, or take medications affected by sleep, food, or melatonin.
+    Consult a qualified clinician when in doubt. Light timing is the primary circadian reset tool;
+    food timing supports eating comfort and metabolic rhythm but is not an accepted primary method
+    to reset the brain's circadian clock.
+  </div>
+  <div class="jbtn-row" style="margin-top:16px;">
+    <button class="jbtn jbtn-s" onclick="jStep(1)">Start Over</button>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* Flight lookups are proxied through /api/lookup so the RapidAPI key
+   stays on the server. Configure RAPIDAPI_KEY in Vercel project settings. */
+
+/* Timeline constants */
+const PH    = 30;        // px per hour
+const WIN_S = 0;         // window start hour (midnight)
+const WIN_H = 24;        // hours shown (full 24h)
+const WIN_PX= WIN_H*PH;  // total height per day section
+const SLEEP_BUFFER_MS = 4 * 3600000;  // 4-hour no-sleep buffer around flights
+
+/* App state */
+const S={
+  chrono:'morning', caf:'light', mel:'open', strat:'alertness', health:[],
+  flights:[]
+};
+
+function newFlight(){
+  return{
+    id:'f'+Math.random().toString(36).slice(2,9),
+    num:'', lookupDate:'',
+    depDate:'', depTime:'', depTz:'', depIATA:'', depAirport:'',
+    arrDate:'', arrTime:'', arrTz:'', arrIATA:'', arrAirport:'',
+    verified:false
+  };
+}
+
+/* ═══════════ INIT ═══════════ */
+function init(){
+  /* Default: one flight with tomorrow+3 as lookup date */
+  const f=newFlight();
+  const d=new Date(); d.setDate(d.getDate()+3);
+  f.lookupDate=isoDate(d);
+  S.flights.push(f);
+  renderFlights();
+
+  pills('jp-chrono',v=>S.chrono=v);
+  pills('jp-caf',   v=>S.caf=v);
+  pills('jp-mel',   v=>S.mel=v);
+  pills('jp-strat', v=>S.strat=v);
+
+  document.querySelectorAll('.jhx').forEach(cb=>{
+    cb.addEventListener('change',()=>{
+      S.health=Array.from(document.querySelectorAll('.jhx:checked')).map(c=>c.value);
+    });
+  });
+}
+
+function isoDate(d){
+  const z=n=>String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`;
+}
+
+function pills(id,cb){
+  const g=document.getElementById(id);
+  g.querySelectorAll('.jpill').forEach(p=>{
+    p.addEventListener('click',()=>{
+      g.querySelectorAll('.jpill').forEach(x=>x.classList.remove('on'));
+      p.classList.add('on'); cb(p.dataset.v);
+    });
+  });
+}
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+/* Short TZ label from IANA zone */
+function tzAbbrev(tz, dateStr){
+  try{
+    const d=dateStr?new Date(dateStr+'T12:00'):new Date();
+    const parts=new Intl.DateTimeFormat('en-US',{timeZone:tz,timeZoneName:'short'}).formatToParts(d);
+    const tzp=parts.find(p=>p.type==='timeZoneName');
+    return tzp?tzp.value:tz.split('/').pop().replace(/_/g,' ');
+  }catch(e){return tz;}
+}
+
+/* ═══════════ FLIGHT REPEATER ═══════════ */
+function renderFlights(){
+  const host=document.getElementById('j-flights');
+  host.innerHTML=S.flights.map((f,i)=>flightRowHTML(f,i)).join('');
+  /* wire up listeners */
+  S.flights.forEach(f=>{
+    const row=host.querySelector(`[data-fid="${f.id}"]`);
+    if(!row) return;
+    row.querySelector('.j-fn').addEventListener('input',e=>f.num=e.target.value);
+    row.querySelector('.j-fdate').addEventListener('input',e=>f.lookupDate=e.target.value);
+    const dd=row.querySelector('.j-dd'); if(dd) dd.addEventListener('input',e=>f.depDate=e.target.value);
+    const dt=row.querySelector('.j-dt'); if(dt) dt.addEventListener('input',e=>f.depTime=e.target.value);
+    const ad=row.querySelector('.j-ad'); if(ad) ad.addEventListener('input',e=>f.arrDate=e.target.value);
+    const at=row.querySelector('.j-at'); if(at) at.addEventListener('input',e=>f.arrTime=e.target.value);
+  });
+}
+
+function flightRowHTML(f,i){
+  const canRemove=S.flights.length>1;
+  const details=f.verified?`
+<div class="jflight-details">
+  <div class="jflight-route">
+    ${esc(f.depIATA)} &rarr; ${esc(f.arrIATA)}
+    <span class="jflight-route-tz">
+      &nbsp; ${esc(tzAbbrev(f.depTz,f.depDate))} &rarr; ${esc(tzAbbrev(f.arrTz,f.arrDate))}
+    </span>
+  </div>
+  <div class="jg2">
+    <div>
+      <span class="jlbl">Depart date</span>
+      <input type="date" class="j-dd" value="${esc(f.depDate)}">
+    </div>
+    <div>
+      <span class="jlbl">Depart time (local)</span>
+      <input type="time" class="j-dt" value="${esc(f.depTime)}">
+    </div>
+    <div>
+      <span class="jlbl">Arrive date</span>
+      <input type="date" class="j-ad" value="${esc(f.arrDate)}">
+    </div>
+    <div>
+      <span class="jlbl">Arrive time (local)</span>
+      <input type="time" class="j-at" value="${esc(f.arrTime)}">
+    </div>
+  </div>
+</div>`:'';
+  return `
+<div class="jflight" data-fid="${f.id}">
+  <div class="jflight-top">
+    <span class="jflight-idx">Flight ${i+1}${i===0?' (primary)':''}</span>
+    ${canRemove?`<button class="jflight-rm" onclick="jRemoveFlight('${f.id}')" title="Remove flight">&times;</button>`:''}
+  </div>
+  <div class="jflight-lookup">
+    <input type="text" class="j-fn" placeholder="e.g. AA 100" maxlength="12" value="${esc(f.num)}">
+    <input type="date" class="j-fdate" value="${esc(f.lookupDate)}">
+    <button class="jbtn jbtn-p" onclick="jLookup('${f.id}')">Look Up</button>
+  </div>
+  <div class="jflight-status" id="jfs-${f.id}"></div>
+  ${details}
+</div>`;
+}
+
+window.jAddFlight=function(){
+  const last=S.flights[S.flights.length-1];
+  const f=newFlight();
+  /* Sensible default: same day as previous flight's arrival if known */
+  f.lookupDate=last&&last.arrDate?last.arrDate:(last?last.lookupDate:isoDate(new Date()));
+  S.flights.push(f);
+  renderFlights();
+};
+
+window.jRemoveFlight=function(id){
+  S.flights=S.flights.filter(f=>f.id!==id);
+  if(S.flights.length===0) S.flights.push(newFlight());
+  renderFlights();
+};
+
+/* Parse Aerodatabox local time string "2026-04-25 10:00-05:00" → {date, time} */
+function parseFlightTime(str){
+  const m=str&&str.match(/^(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2})/);
+  return m ? {date:m[1], time:m[2]} : null;
+}
+
+window.jLookup=async function(id){
+  const f=S.flights.find(x=>x.id===id);
+  if(!f) return;
+  const row=document.querySelector(`[data-fid="${id}"]`);
+  const status=document.getElementById('jfs-'+id);
+  const btn=row.querySelector('.jflight-lookup .jbtn-p');
+  /* read current input values */
+  f.num=row.querySelector('.j-fn').value.trim();
+  f.lookupDate=row.querySelector('.j-fdate').value;
+
+  if(!f.num){
+    status.className='jstatus-err';
+    status.textContent='Enter a flight number first.';
+    return;
+  }
+  if(!f.lookupDate){
+    status.className='jstatus-err';
+    status.textContent='Enter a departure date first.';
+    return;
+  }
+
+  const code=f.num.replace(/\s+/g,'').toUpperCase();
+  status.className='jstatus-spin'; status.textContent='Looking up '+code+'…';
+  btn.disabled=true;
+
+  try{
+    /* Proxy keeps RapidAPI key server-side. */
+    const res=await fetch(`/api/lookup?num=${encodeURIComponent(code)}&date=${encodeURIComponent(f.lookupDate)}`);
+    if(!res.ok){
+      let detail='';
+      try{ const j=await res.json(); detail=j.error||''; }catch(e){}
+      throw new Error(detail || ('HTTP '+res.status));
+    }
+    const data=await res.json();
+    if(!Array.isArray(data)||data.length===0) throw new Error('No results');
+
+    const d=data[0];
+    const depT=parseFlightTime(d.departure?.scheduledTime?.local);
+    const arrT=parseFlightTime(d.arrival?.scheduledTime?.local);
+    if(!depT||!arrT) throw new Error('Could not parse times');
+
+    f.num=code;
+    f.depDate=depT.date; f.depTime=depT.time;
+    f.arrDate=arrT.date; f.arrTime=arrT.time;
+    f.depTz=d.departure.airport.timeZone;
+    f.arrTz=d.arrival.airport.timeZone;
+    f.depIATA=d.departure.airport.iata||d.departure.airport.icao||'';
+    f.arrIATA=d.arrival.airport.iata||d.arrival.airport.icao||'';
+    f.depAirport=d.departure.airport.name||'';
+    f.arrAirport=d.arrival.airport.name||'';
+    f.lookupDate=depT.date;
+    f.verified=true;
+
+    renderFlights();
+    /* restore status after re-render */
+    const s2=document.getElementById('jfs-'+id);
+    if(s2){
+      s2.className='jstatus-ok';
+      s2.innerHTML=`<strong>${esc(code)}</strong> &bull; ${esc(f.depIATA)} &rarr; ${esc(f.arrIATA)} &bull; `
+        +`${esc(depT.date)} ${esc(depT.time)} &rarr; ${esc(arrT.date)} ${esc(arrT.time)} local.`;
+    }
+  } catch(err){
+    status.className='jstatus-err';
+    status.textContent=`Could not find ${code} on ${f.lookupDate}. Check the number and date. (${err.message})`;
+  } finally{
+    btn.disabled=false;
+  }
+};
+
+/* ═══════════ NAVIGATION ═══════════ */
+window.jStep=function(n){
+  [1,2,3].forEach(i=>{
+    document.getElementById('js'+i).classList.toggle('h',i!==n);
+    document.getElementById('jd'+i).classList.toggle('on',i<=n);
+  });
+  /* Step 3 becomes reachable only after a plan has been built */
+  if(n===3) document.getElementById('jd3').disabled=false;
+  document.getElementById('jlr').scrollIntoView({behavior:'smooth',block:'start'});
+};
+
+/* Direct navigation via the progress dots */
+window.jGoto=function(n){
+  if(n===3&&document.getElementById('jd3').disabled) return;
+  jStep(n);
+};
+
+/* ═══════════ HELPERS ═══════════ */
+function utcOff(tz,date){
+  try{
+    const u=new Date(date.toLocaleString('en-US',{timeZone:'UTC'}));
+    const t=new Date(date.toLocaleString('en-US',{timeZone:tz}));
+    return (t-u)/3600000;
+  }catch(e){return 0;}
+}
+
+function pt(s){const[h,m]=s.split(':').map(Number);return h*60+m;}
+function wrap(m){return((m%1440)+1440)%1440;}
+function addm(m,d){return wrap(m+d);}
+
+function fmtT(m){
+  m=wrap(m);
+  const h=Math.floor(m/60),mn=m%60;
+  const ap=h<12?'am':'pm',h12=h===0?12:h>12?h-12:h;
+  return mn===0?`${h12}${ap}`:`${h12}:${String(mn).padStart(2,'0')}${ap}`;
+}
+
+function fmtDate(d){
+  return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+}
+
+/* Clip circadian pill to visible window (5 am – midnight).
+   Handles overnight events (end < start = crosses midnight). */
+function clip(s,e){
+  const ws=WIN_S*60, we=(WIN_S+WIN_H)*60;
+  if(e<s) e+=1440;
+  const cs=Math.max(s,ws), ce=Math.min(e,we);
+  if(ce-cs<10) return null;
+  return{top:(cs-ws)/60*PH, height:(ce-cs)/60*PH};
+}
+
+/* Render one pill element. Labels are rendered vertically (writing-mode);
+   only show when the pill is tall enough for the text to fit comfortably. */
+function pill(p){
+  const c=clip(p.s,p.e);
+  if(!c) return '';
+  const lbl=p.l||'';
+  const minH=Math.max(40, lbl.length*7.5 + 16);
+  const label = c.height >= minH ? `<span class="jep-lbl">${esc(lbl)}</span>` : '';
+  const title = p.sub ? `${lbl} · ${p.sub}` : lbl;
+  return `<div class="jep jep-${p.t}" style="top:${c.top.toFixed(1)}px;height:${c.height.toFixed(1)}px;" title="${esc(title)}">${label}</div>`;
+}
+
+/* Parse YYYY-MM-DD to [y,m,d] (month 1-indexed for human use) */
+function parseYMD(s){const[y,m,d]=s.split('-').map(Number);return[y,m,d];}
+
+/* Convert local date+time string in given TZ to UTC ms */
+function localToUTC(dateStr,timeStr,tz){
+  const[y,m,d]=parseYMD(dateStr);
+  const[h,mn]=timeStr.split(':').map(Number);
+  const probe=new Date(Date.UTC(y,m-1,d,12,0));
+  const off=utcOff(tz,probe);
+  return Date.UTC(y,m-1,d,h,mn)-off*3600000;
+}
+
+/* Given a flight's UTC start/end and a day in a particular TZ,
+   return {s,e} in minutes-since-local-midnight for that day (clipped to day), or null. */
+function flightOnDay(flightStartUTC,flightEndUTC,dayDateStr,tz){
+  const[y,m,d]=parseYMD(dayDateStr);
+  const probe=new Date(Date.UTC(y,m-1,d,12,0));
+  const off=utcOff(tz,probe);
+  const dayStartUTC=Date.UTC(y,m-1,d,0,0)-off*3600000;
+  const dayEndUTC  =dayStartUTC+86400000;
+  const s=Math.max(flightStartUTC,dayStartUTC);
+  const e=Math.min(flightEndUTC,dayEndUTC);
+  if(e<=s) return null;
+  const sMin=Math.round((s-dayStartUTC)/60000);
+  const eMin=Math.round((e-dayStartUTC)/60000);
+  if(eMin-sMin<10) return null;
+  return{s:sMin,e:eMin};
+}
+
+/* Add n days to an ISO YYYY-MM-DD string, returning ISO string */
+function addDays(dateStr,n){
+  const[y,m,d]=parseYMD(dateStr);
+  const dt=new Date(Date.UTC(y,m-1,d));
+  dt.setUTCDate(dt.getUTCDate()+n);
+  const z=x=>String(x).padStart(2,'0');
+  return `${dt.getUTCFullYear()}-${z(dt.getUTCMonth()+1)}-${z(dt.getUTCDate())}`;
+}
+
+/* ═══════════ BUILD PLAN ═══════════ */
+window.jBuild=function(){
+  const errBox=document.getElementById('j-build-err');
+  errBox.innerHTML='';
+  const flights=S.flights.filter(f=>f.verified&&f.depDate&&f.depTime&&f.arrDate&&f.arrTime&&f.depTz&&f.arrTz);
+  if(flights.length===0){
+    errBox.innerHTML='<div class="jform-err">Please look up at least one flight before building your plan.</div>';
+    return;
+  }
+
+  /* Pre-compute UTC times for every leg */
+  const legs=flights.map(f=>{
+    const depUTC=localToUTC(f.depDate,f.depTime,f.depTz);
+    const arrUTC=localToUTC(f.arrDate,f.arrTime,f.arrTz);
+    return{
+      ...f,
+      depUTC, arrUTC,
+      label:f.num||'Flight',
+      route:(f.depIATA&&f.arrIATA)?`${f.depIATA} → ${f.arrIATA}`:''
+    };
+  });
+
+  const first=legs[0], last=legs[legs.length-1];
+  const otz=first.depTz, dtz=last.arrTz;
+
+  const checkInMin=parseInt(document.getElementById('j-checkin').value);
+  const customsMin=parseInt(document.getElementById('j-customs').value);
+
+  /* Probe offsets on the travel days for labeling */
+  const oOff=utcOff(otz,new Date(first.depUTC));
+  const dOff=utcOff(dtz,new Date(last.arrUTC));
+  const shift=dOff-oOff;
+  const dir=shift>0.5?'east':shift<-0.5?'west':'minimal';
+  const shiftH=Math.abs(shift);
+
+  /* Total journey hours (door to door, UTC) */
+  const journeyHours=Math.max(0,(last.arrUTC-first.depUTC)/3600000);
+  /* Sum of in-air hours */
+  const airHours=legs.reduce((sum,l)=>sum+Math.max(0,(l.arrUTC-l.depUTC)/3600000),0);
+
+  /* Day 0 = first leg's depDate (in origin TZ).
+     Last arrival day = last leg's arrDate (in destination TZ).
+     arrDayOff = calendar day diff between those two dates (string-based). */
+  const arrDayOff=Math.round(
+    (Date.UTC(...parseYMD(last.arrDate).map((n,i)=>i===1?n-1:n))
+    -Date.UTC(...parseYMD(first.depDate).map((n,i)=>i===1?n-1:n)))/86400000
+  );
+
+  /* Circadian parameters */
+  const chronAdj=S.chrono==='morning'?-45:S.chrono==='evening'?45:0;
+  const bioBed =addm(pt(document.getElementById('j-bed').value), chronAdj);
+  const bioWake=addm(pt(document.getElementById('j-wake').value),chronAdj);
+  const rate=S.strat==='fast'?120:S.strat==='gentle'?60:90;
+  const hasExcl=S.health.length>0;
+  const showMel=S.mel!=='never'&&!hasExcl;
+
+  /* Progressive sleep shift.
+     Pre-arrival (origin TZ): start pre-shifting ~2 days before departure
+       at rate*0.5 min/day, advancing toward destination time, capped at
+       total shift needed.
+     Post-arrival (destination TZ): drift residual shift back to local
+       normal over 3 days, so the first nights at destination visibly show
+       the body still catching up before settling. */
+  function adapted(dayOff,refTz){
+    const total=shiftH*60;
+    const sign=dir==='east'?-1:dir==='west'?1:0;
+    let adv;
+    if(refTz===dtz){
+      /* post-arrival: residual pull from old schedule, fades over 3 days */
+      const daysIn=dayOff-arrDayOff;
+      const residualFrac=Math.max(0, 1-daysIn/3);
+      adv=-sign*total*residualFrac;  // opposite sign: body still "behind"
+    }else{
+      /* pre-arrival: ramp up from day -2 */
+      const shiftDays=Math.max(0, dayOff+2);
+      adv=sign*Math.min(total, shiftDays*rate*0.5);
+    }
+    return{bed:addm(bioBed,adv), wake:addm(bioWake,adv)};
+  }
+
+  /* Build check-in & customs as UTC-anchored events */
+  const checkInUTC   = first.depUTC - checkInMin*60000;
+  const boardingUTC  = first.depUTC - 45*60000;
+  const customsEndUTC= last.arrUTC + customsMin*60000;
+
+  /* 4-hour no-sleep buffer around every flight. We surround each leg
+     with [depUTC - 4h, arrUTC + 4h] to keep travelers alert for boarding
+     and acclimation. Sleep blocks overlapping these windows are trimmed. */
+  const noSleepWindows = legs.map(l=>({
+    start: l.depUTC - SLEEP_BUFFER_MS,
+    end:   l.arrUTC + SLEEP_BUFFER_MS
+  }));
+
+  /* Trim a list of sleep blocks (in local-day minutes) against the
+     UTC no-sleep windows. */
+  function applySleepBuffer(blocks, dayDateStr, refTz){
+    const[y,m,d]=parseYMD(dayDateStr);
+    const probe=new Date(Date.UTC(y,m-1,d,12,0));
+    const off=utcOff(refTz,probe);
+    const dayStartUTC=Date.UTC(y,m-1,d,0,0)-off*3600000;
+    let out=blocks.slice();
+    for(const w of noSleepWindows){
+      const next=[];
+      for(const b of out){
+        const bS=dayStartUTC + b.s*60000;
+        const bE=dayStartUTC + b.e*60000;
+        if(bE<=w.start || bS>=w.end){ next.push(b); continue; }
+        if(bS < w.start){
+          const e=Math.round((w.start-dayStartUTC)/60000);
+          if(e - b.s >= 30) next.push({...b, e});
+        }
+        if(bE > w.end){
+          const s=Math.round((w.end-dayStartUTC)/60000);
+          if(b.e - s >= 30) next.push({...b, s});
+        }
+      }
+      out=next;
+    }
+    return out;
+  }
+
+  /* For visual no-sleep band: map UTC windows to local-day minute ranges. */
+  function noSleepBandsForDay(dayDateStr, refTz){
+    const[y,m,d]=parseYMD(dayDateStr);
+    const probe=new Date(Date.UTC(y,m-1,d,12,0));
+    const off=utcOff(refTz,probe);
+    const dayStartUTC=Date.UTC(y,m-1,d,0,0)-off*3600000;
+    const dayEndUTC=dayStartUTC+86400000;
+    const out=[];
+    for(const w of noSleepWindows){
+      const s=Math.max(w.start, dayStartUTC);
+      const e=Math.min(w.end, dayEndUTC);
+      if(e<=s) continue;
+      out.push({
+        s:Math.round((s-dayStartUTC)/60000),
+        e:Math.round((e-dayStartUTC)/60000)
+      });
+    }
+    return out;
+  }
+
+  /* Layover segments: between consecutive legs */
+  const layovers=[];
+  for(let i=0;i<legs.length-1;i++){
+    layovers.push({
+      start:legs[i].arrUTC, end:legs[i+1].depUTC,
+      airport:legs[i].arrIATA||'', tz:legs[i].arrTz
+    });
+  }
+
+  /* Generate all pills for one day section.
+     dayOff: 0 = first-flight departure day, arrDayOff = final arrival day. */
+  function dayPills(dayOff,dayDateStr,refTz){
+    const{bed,wake}=adapted(dayOff,refTz);
+    const preDep=dayOff<0;
+    const isDepDay=dayOff===0;
+    const isArrDay=dayOff===arrDayOff;
+
+    /* -- Lane A: sleep + light -- */
+    const a=[];
+    /* If bed>wake the sleep block crosses midnight — split into two pills.
+       Otherwise it sits within a single day (large westward shifts). */
+    const rawSleep=[];
+    if(bed>wake){
+      rawSleep.push({t:'sleep',l:'Sleep',s:bed,e:1440});
+      rawSleep.push({t:'sleep',l:'Sleep',s:0,e:wake});
+    }else{
+      rawSleep.push({t:'sleep',l:'Sleep',s:bed,e:wake});
+    }
+    /* Enforce: no sleep within 4 hours of any flight (departure or arrival). */
+    applySleepBuffer(rawSleep, dayDateStr, refTz).forEach(b=>a.push(b));
+    a.push({t:'seek', l:'Light',s:addm(wake,30), e:addm(wake,210)});
+    a.push({t:'avoid',l:'Avoid',s:addm(bed,-90),e:bed});
+
+    /* -- Lane B: caffeine + nap + melatonin -- */
+    const b=[];
+    if(S.caf!=='none'){
+      const cut=addm(bed,-420);
+      b.push({t:'caf-y',l:'Caffeine',s:wake,e:cut});
+      b.push({t:'caf-n',l:'No Caf',s:cut, e:bed});
+    }
+    if(isDepDay||isArrDay){
+      b.push({t:'nap',l:'Nap',s:addm(wake,240),e:addm(wake,330)});
+    }
+    if(showMel&&!preDep&&dayOff<=arrDayOff+2){
+      b.push({t:'mel',l:'Melatonin',s:addm(bed,-60),e:bed});
+    }
+
+    /* -- Lane C: journey events -- */
+    const c=[];
+
+    /* Check-in + boarding on first flight's departure day */
+    const checkInSlot=flightOnDay(checkInUTC,boardingUTC,dayDateStr,refTz);
+    if(checkInSlot) c.push({t:'checkin',l:'Check-in',s:checkInSlot.s,e:checkInSlot.e});
+    const boardSlot=flightOnDay(boardingUTC,first.depUTC,dayDateStr,refTz);
+    if(boardSlot) c.push({t:'board',l:'Boarding',s:boardSlot.s,e:boardSlot.e});
+
+    /* Each flight leg — primary label is flight number, sub is route */
+    legs.forEach(leg=>{
+      const slot=flightOnDay(leg.depUTC,leg.arrUTC,dayDateStr,refTz);
+      if(slot) c.push({
+        t:'flight',
+        l:leg.num||'Flight',
+        sub:(leg.depIATA&&leg.arrIATA)?`${leg.depIATA} → ${leg.arrIATA}`:'',
+        s:slot.s,e:slot.e
+      });
+    });
+
+    /* Layovers between legs */
+    layovers.forEach(lo=>{
+      const slot=flightOnDay(lo.start,lo.end,dayDateStr,refTz);
+      if(slot){
+        c.push({
+          t:'layover',
+          l: lo.airport?`Layover ${lo.airport}`:'Layover',
+          sub: lo.airport,
+          s:slot.s, e:slot.e
+        });
+      }
+    });
+
+    /* Customs after final arrival */
+    const custSlot=flightOnDay(last.arrUTC,customsEndUTC,dayDateStr,refTz);
+    if(custSlot) c.push({t:'customs',l:'Customs',s:custSlot.s,e:custSlot.e});
+
+    /* Per-day travel note */
+    let flightNote=null;
+    if(isDepDay){
+      flightNote=`${legs.length>1?'First leg':legs[0].label} departs ${fmtT(flightOnDay(first.depUTC,first.depUTC+60000,dayDateStr,refTz)?.s||0)}. On the plane: use window light or reading lamp for seek-light windows; eye mask for avoid-light windows. Keep meals light, no alcohol.`;
+    } else if(isArrDay){
+      const arrSlot=flightOnDay(last.arrUTC,last.arrUTC+60000,dayDateStr,refTz);
+      flightNote=`${last.label} arrives ${fmtT(arrSlot?.s||0)}. Break the fast at local breakfast time with a high-protein meal. Stay active all day.`;
+    } else if(dayOff>0&&dayOff<arrDayOff){
+      flightNote=`In transit. Apply seek-light using window shade or reading lamp. Sleep when the window aligns with your sleep block.`;
+    }
+
+    return{laneA:a, laneB:b, laneC:c, flightNote};
+  }
+
+  /* Render one day section */
+  function renderDay(dayOff, date, dayDateStr, refTz, tzShort){
+    const{laneA,laneB,laneC,flightNote}=dayPills(dayOff,dayDateStr,refTz);
+    const isTransit=dayOff>0&&dayOff<arrDayOff;
+    const isArrDay=dayOff===arrDayOff;
+
+    let dayLabel='';
+    if(dayOff<0)          dayLabel=`${Math.abs(dayOff)} day${Math.abs(dayOff)>1?'s':''} before departure`;
+    else if(dayOff===0)   dayLabel='Departure day';
+    else if(isTransit)    dayLabel=`In transit · day ${dayOff}`;
+    else if(isArrDay)     dayLabel='Arrival day';
+    else                  dayLabel=`Day ${dayOff-arrDayOff} at destination`;
+
+    /* Hourly time labels on both sides */
+    let ruler='';
+    for(let h=WIN_S;h<=WIN_S+WIN_H;h++){
+      const show = h%2===0;
+      if(show) ruler+=`<div class="jruler-lbl" style="top:${(h-WIN_S)*PH}px">${fmtT(h*60)}</div>`;
+    }
+
+    /* Grid: solid every 6h, dashed every 1h */
+    let grid='';
+    for(let h=0;h<=WIN_H;h++){
+      const cls = h%6===0 ? 'jgrid-line solid' : 'jgrid-line';
+      grid+=`<div class="${cls}" style="top:${h*PH}px"></div>`;
+    }
+
+    /* No-sleep buffer bands for this day */
+    const bands = noSleepBandsForDay(dayDateStr, refTz);
+    const bandsHTML = bands.map(b=>{
+      const top=(b.s/60-WIN_S)*PH;
+      const height=((b.e-b.s)/60)*PH;
+      return `<div class="jno-sleep" style="top:${top.toFixed(1)}px;height:${height.toFixed(1)}px;"></div>`;
+    }).join('');
+
+    const noteHTML=flightNote?`<div class="jday-note">${esc(flightNote)}</div>`:'';
+
+    return `
+<div class="jday-hdr">
+  <span class="jday-date">${fmtDate(date)}</span>
+  <span class="jday-tz">${esc(tzShort)} time</span>
+  <span class="jday-label">${esc(dayLabel)}</span>
+</div>${noteHTML}
+<div class="jlane-hdrs">
+  <div class="jlane-hdr">Light · Sleep</div>
+  <div class="jlane-hdr">Caffeine · Nap</div>
+  <div class="jlane-hdr">Journey</div>
+</div>
+<div class="jtrack" style="height:${WIN_PX}px;">
+  <div class="jruler jruler-l" style="height:${WIN_PX}px;">${ruler}</div>
+  <div class="jevents" style="height:${WIN_PX}px;">
+    <div class="jgrid">${grid}</div>
+    <div class="jlane jlane-a">${bandsHTML}${laneA.map(pill).join('')}</div>
+    <div class="jlane jlane-b">${laneB.map(pill).join('')}</div>
+    <div class="jlane jlane-c">${laneC.map(pill).join('')}</div>
+  </div>
+  <div class="jruler jruler-r" style="height:${WIN_PX}px;">${ruler}</div>
+</div>`;
+  }
+
+  /* ── Assemble ── */
+  jStep(3);
+
+  const score=Math.max(62,Math.round(100-shiftH*1.8));
+  const adaptDays=Math.max(1,Math.ceil(shiftH/1.5));
+  const dirLabel=dir==='east'?`Eastbound +${Math.round(shiftH)}h — advance your clock`
+                :dir==='west'?`Westbound -${Math.round(shiftH)}h — delay your clock`
+                :'Minimal time change';
+
+  const oShort=tzAbbrev(otz,first.depDate);
+  const dShort=tzAbbrev(dtz,last.arrDate);
+
+  const routeSummary=legs.map(l=>l.depIATA||'?').concat([last.arrIATA||'?']).join(' → ');
+  const flightNums=legs.map(l=>l.num).filter(Boolean).join(', ')||'Flight';
+
+  document.getElementById('j-phdr').innerHTML=`
+<div class="jplan-hdr">
+  <div class="jring"><span class="jring-n">${score}%</span></div>
+  <div>
+    <div class="jplan-ttl">Your Jet Lag Reset Plan</div>
+    <div class="jplan-sub">
+      ${esc(flightNums)} &bull; ${esc(routeSummary)}<br>
+      ${esc(dirLabel)}. ${legs.length>1?`${legs.length} legs, `:''}~${airHours.toFixed(1)}h airborne${journeyHours>airHours+0.3?`, ${journeyHours.toFixed(1)}h total`:''}. Full adaptation in about ${adaptDays} day${adaptDays!==1?'s':''}.
+    </div>
+  </div>
+</div>`;
+
+  const alertsEl=document.getElementById('j-alerts');
+  alertsEl.innerHTML='';
+  alertsEl.innerHTML+=`<div class="jnote"><strong>Sleep buffer:</strong> No sleep is scheduled within 4 hours of any flight departure or arrival, so you stay alert through boarding and on touchdown. The hatched band on each day marks the no-sleep window.</div>`;
+  if(hasExcl) alertsEl.innerHTML+=`<div class="jalert"><strong>Health note:</strong> Melatonin is disabled based on your profile. Follow light, sleep, and hydration guidance only. Ask a clinician before taking melatonin.</div>`;
+  if(showMel) alertsEl.innerHTML+=`<div class="jnote"><strong>Melatonin:</strong> Optional windows shown. Timing matters &mdash; discuss with a clinician if you take medications or have medical conditions.</div>`;
+
+  document.getElementById('j-legend').innerHTML=`
+<div class="jlegend">
+  <div class="jleg"><div class="jleg-bar" style="background:var(--c-light)"></div>Seek light</div>
+  <div class="jleg"><div class="jleg-bar outlined"></div>Avoid light</div>
+  <div class="jleg"><div class="jleg-bar" style="background:var(--c-sleep)"></div>Sleep</div>
+  <div class="jleg"><div class="jleg-bar" style="background:var(--c-caf)"></div>Caffeine OK</div>
+  <div class="jleg"><div class="jleg-bar" style="background:var(--c-nap)"></div>Nap</div>
+  ${showMel?'<div class="jleg"><div class="jleg-bar" style="background:var(--c-mel)"></div>Melatonin</div>':''}
+  <div class="jleg"><div class="jleg-bar" style="background:var(--c-checkin)"></div>Check-in</div>
+  <div class="jleg"><div class="jleg-bar" style="background:var(--c-flight)"></div>In flight</div>
+  <div class="jleg"><div class="jleg-bar outlined"></div>Layover</div>
+  <div class="jleg"><div class="jleg-bar" style="background:var(--c-customs)"></div>Customs / arrival</div>
+</div>`;
+
+  /* Build day sections:
+     -2 and -1 (pre-departure, origin TZ)
+     0 through arrDayOff-1 (departure + transit, origin TZ)
+     arrDayOff through arrDayOff+3 (arrival + post, destination TZ) */
+  const sections=[];
+  for(let d=-2; d<=-1; d++){
+    sections.push({d, date:addDays(first.depDate,d), tz:otz, short:oShort});
+  }
+  for(let d=0; d<arrDayOff; d++){
+    sections.push({d, date:addDays(first.depDate,d), tz:otz, short:oShort});
+  }
+  for(let d=arrDayOff; d<=arrDayOff+3; d++){
+    sections.push({d, date:addDays(last.arrDate,d-arrDayOff), tz:dtz, short:dShort});
+  }
+
+  document.getElementById('j-tl').innerHTML=sections.map(({d,date,tz,short})=>{
+    const[y,m,dd]=parseYMD(date);
+    const displayDate=new Date(y,m-1,dd);
+    return renderDay(d,displayDate,date,tz,short);
+  }).join('');
+};
+
+init();
+})();
+</script>
+</div>
+<!-- End Jet Lag Reset -->
+</body>
+</html>
